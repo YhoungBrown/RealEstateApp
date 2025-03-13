@@ -23,5 +23,9 @@ export default function RootLayout() {
 
   if (!fontsLoaded) return null; // Prevent rendering until fonts load
 
-  return <Stack screenOptions={{headerShown: false}}/>
+  return (
+    <GlobalProvider>
+      <Stack screenOptions={{headerShown: false}}/>
+    </GlobalProvider>
+  )
 }

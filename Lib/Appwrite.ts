@@ -1,81 +1,118 @@
 import { Account, Avatars, Client, OAuthProvider } from "react-native-appwrite"; 
-import * as Linking from "expo-linking";
-import { openAuthSessionAsync } from "expo-web-browser";
+import { makeRedirectUri } from 'expo-auth-session';
+import * as WebBrowser from 'expo-web-browser';
 
+// ✅ Appwrite Config
 export const config = {
   platform: "com.jsm.realestateapp",
   endpoint: process.env.EXPO_PUBLIC_APPWRITE_ENDPOINT!,
   projectId: process.env.EXPO_PUBLIC_APPWRITE_PROJECT_ID!,
 };
 
+// ✅ Appwrite Client Setup
 export const client = new Client();
-
 client
   .setEndpoint(config.endpoint)
   .setProject(config.projectId)
   .setPlatform(config.platform);
 
-// Creating user avatar from Name
+// ✅ Creating user avatar from Name
 export const avatar = new Avatars(client);
 export const account = new Account(client);
 
-//Login Function
 
 export const logIn = async () => {
   try {
-    const redirectURI = Linking.createURL("/");
+  
+    const deepLink = new URL(makeRedirectUri({ scheme: "RealEstateApp" }));
+    console.log("Deep Link URI:", deepLink.toString());
 
-    const response = await account.createOAuth2Token(OAuthProvider.Google, redirectURI);
+    
+    const scheme = "RealEstateApp://";
 
-    if (!response) throw new Error("Failed to login");
+    // Start OAuth flow
+    const loginUrl = await account.createOAuth2Token(
+      OAuthProvider.Google,
+      deepLink.toString(),
+      deepLink.toString(),
+    );
 
-    const browserResult = await openAuthSessionAsync(response.toString(), redirectURI);
+    console.log("Login URL:", loginUrl);
 
-    if (browserResult.type !== "success") throw new Error("Failed to login");
+    if (!loginUrl) throw new Error("Failed to get OAuth login URL");
 
+    // Open the OAuth login URL
+    const browserResult = await WebBrowser.openAuthSessionAsync(
+      `${loginUrl}`,
+      scheme
+    );
+
+    console.log("Browser Result:", browserResult);
+
+    if (!browserResult || browserResult.type !== "success" || !browserResult.url) {
+      throw new Error("OAuth login was unsuccessful");
+    }
+
+    // Extract credentials from OAuth redirect URL
     const url = new URL(browserResult.url);
-    const secret = url.searchParams.get("secret")?.toString();
-    const userId = url.searchParams.get("userId")?.toString();
+    const secret = url.searchParams.get("secret");
+    const userId = url.searchParams.get("userId");
 
-    if (!secret || !userId) throw new Error("Failed to login");
+    console.log("Extracted Secret:", secret);
+    console.log("Extracted User ID:", userId);
 
+    if (!secret || !userId) {
+      throw new Error("Failed to extract OAuth credentials");
+    }
+
+    // Create session with OAuth credentials
     const session = await account.createSession(userId, secret);
-
-    if (!session) throw new Error("Failed to create a session");
+    console.log("Session Created:", session);
 
     return true;
   } catch (error) {
-    console.error(error);
+    console.error("Login Error:", error);
     return false;
   }
 };
 
 
+// ✅ Logout Function
 export const logout = async () => {
   try {
     await account.deleteSession("current");
     return true;
   } catch (error) {
-    console.error(error);
-    return false
+    console.error("Logout Error:", error);
+    return false;
   }
-}
+};
 
+
+// ✅ Get Current User Function
 export const getCurrentUser = async () => {
   try {
+    // ✅ Check if a session exists
+    const sessions = await account.getSession("current");
+    if (!sessions) {
+      console.log("No active session found.");
+      return null;
+    }
+
     const user = await account.get();
 
-    if(user.$id) {
-      const userAvatar = avatar.getInitials(user.name)
+    if (user.$id) {
+      const userAvatar = avatar.getInitials(user.name);
 
       return {
         ...user,
-        avatar: userAvatar.toString() 
-      }
+        avatar: userAvatar.toString(),
+      };
     }
+
     return user;
   } catch (error) {
-    console.error(error);
+    console.error("Get Current User Error:", error);
     return null;
   }
-}
+};

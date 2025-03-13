@@ -1,23 +1,25 @@
-import { View, Text, ScrollView, Image, TouchableOpacity, Alert } from 'react-native'
-import React from 'react'
-import { SafeAreaView } from 'react-native-safe-area-context'
-import { s } from "react-native-wind";
-import images from '@/constants/images';
 import icons from '@/constants/icons';
+import images from '@/constants/images';
 import { logIn } from '@/Lib/Appwrite';
+import React from 'react';
+import { Alert, Image, ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { s } from "react-native-wind";
+
 
 
 const signIn = () => {
 
-  // const handleLogIn = async () => {
-  //   const result = await logIn();
+  const handleLogIn = async () => {
+    const result = await logIn();
 
-  //   if(result) {
-  //     console.log("Logged In Successfully")
-  //   } else {
-  //     Alert.alert("Error", "Failed to login")
-  //   }
-  // }
+    if(result) {
+      console.log("Logged In Successfully")
+    } else {
+      Alert.alert("Error", "Failed to login")
+    }
+  }
+
 
   return (
     <SafeAreaView style={s`bg-white h-full`}>
@@ -41,7 +43,7 @@ const signIn = () => {
 
                   <Text style={[s`text-md text-black-200 text-center mt-6`, {fontFamily: "Rubik-Regular"}]}>Sign In WIth Google</Text>
 
-                  <TouchableOpacity style={s`bg-primary-400 shadow-md shadow-zinc-300 rounded-full w-full py-4 mt-5 flex-row justify-center align-center space-around-3`}>
+                  <TouchableOpacity style={s`bg-primary-400 shadow-md shadow-zinc-300 rounded-full w-full py-4 mt-5 flex-row justify-center align-center space-around-3`} onPress={handleLogIn}>
                       <Image 
                         source={icons.google}  
                         style={s`w-6 h-6 ml-4`} 
