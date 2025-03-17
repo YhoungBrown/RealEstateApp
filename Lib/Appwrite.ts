@@ -1,6 +1,6 @@
 import { Account, Avatars, Client, OAuthProvider } from "react-native-appwrite"; 
 import { makeRedirectUri } from 'expo-auth-session';
-import * as WebBrowser from 'expo-web-browser';
+import {openAuthSessionAsync} from 'expo-web-browser';
 
 // ✅ Appwrite Config
 export const config = {
@@ -23,26 +23,23 @@ export const account = new Account(client);
 
 export const logIn = async () => {
   try {
-  
     const deepLink = new URL(makeRedirectUri({ scheme: "RealEstateApp" }));
     console.log("Deep Link URI:", deepLink.toString());
 
-    
-    const scheme = "RealEstateApp://";
+    const scheme = `${deepLink.protocol}//`;
 
     // Start OAuth flow
     const loginUrl = await account.createOAuth2Token(
       OAuthProvider.Google,
-      deepLink.toString(),
-      deepLink.toString(),
+      `${deepLink}`
     );
 
     console.log("Login URL:", loginUrl);
 
     if (!loginUrl) throw new Error("Failed to get OAuth login URL");
 
-    // Open the OAuth login URL
-    const browserResult = await WebBrowser.openAuthSessionAsync(
+    // Open the OAuth login URL in the browser
+    const browserResult = await openAuthSessionAsync(
       `${loginUrl}`,
       scheme
     );
