@@ -13,10 +13,7 @@ export default function Index() {
     >
 
       <Text style={s`font-bold text-lg my-10 `}>Welcome to my Real Estate App</Text>
-      <Link href="/signIn"> Sign In</Link>
-      <Link href="/explore"> Explore</Link>
-      <Link href="/profile"> Profile</Link>
-      <Link href="/property/1"> Property</Link>
+      
     </View> 
   );
 }

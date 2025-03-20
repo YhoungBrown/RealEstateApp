@@ -3,6 +3,7 @@ import { useFonts } from "expo-font";
 import { useEffect } from "react";
 import "../wind.config"
 import GlobalProvider from "@/Lib/globalProvider";
+import "../TS consoleOveride/consoleOverride";
 
 export default function RootLayout() {
   const [fontsLoaded] = useFonts({

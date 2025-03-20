@@ -1,6 +1,8 @@
 import icons from '@/constants/icons';
 import images from '@/constants/images';
 import { logIn } from '@/Lib/Appwrite';
+import { useGlobalContext } from '@/Lib/globalProvider';
+import { Redirect } from 'expo-router';
 import React from 'react';
 import { Alert, Image, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -10,11 +12,15 @@ import { s } from "react-native-wind";
 
 const signIn = () => {
 
+  const {refetch, loading, isLoggedIn} = useGlobalContext();
+
+  if (!loading && isLoggedIn) return <Redirect href="/" />
+
   const handleLogIn = async () => {
     const result = await logIn();
 
     if(result) {
-      console.log("Logged In Successfully")
+      refetch();
     } else {
       Alert.alert("Error", "Failed to login")
     }

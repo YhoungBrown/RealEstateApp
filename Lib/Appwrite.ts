@@ -1,15 +1,15 @@
 import { Account, Avatars, Client, OAuthProvider } from "react-native-appwrite"; 
 import { makeRedirectUri } from 'expo-auth-session';
-import {openAuthSessionAsync} from 'expo-web-browser';
+import * as WebBrowser from 'expo-web-browser';
 
-// ✅ Appwrite Config
+
 export const config = {
   platform: "com.jsm.realestateapp",
   endpoint: process.env.EXPO_PUBLIC_APPWRITE_ENDPOINT!,
   projectId: process.env.EXPO_PUBLIC_APPWRITE_PROJECT_ID!,
 };
 
-// ✅ Appwrite Client Setup
+
 export const client = new Client();
 client
   .setEndpoint(config.endpoint)
@@ -24,25 +24,20 @@ export const account = new Account(client);
 export const logIn = async () => {
   try {
     const deepLink = new URL(makeRedirectUri({ scheme: "RealEstateApp" }));
-    console.log("Deep Link URI:", deepLink.toString());
 
     const scheme = `${deepLink.protocol}//`;
 
     // Start OAuth flow
     const loginUrl = await account.createOAuth2Token(
       OAuthProvider.Google,
+      `${deepLink}`,
       `${deepLink}`
     );
 
-    console.log("Login URL:", loginUrl);
-
     if (!loginUrl) throw new Error("Failed to get OAuth login URL");
 
-    // Open the OAuth login URL in the browser
-    const browserResult = await openAuthSessionAsync(
-      `${loginUrl}`,
-      scheme
-    );
+    
+    const browserResult =  await WebBrowser.openAuthSessionAsync(`${loginUrl}`, scheme);
 
     console.log("Browser Result:", browserResult);
 
@@ -55,16 +50,12 @@ export const logIn = async () => {
     const secret = url.searchParams.get("secret");
     const userId = url.searchParams.get("userId");
 
-    console.log("Extracted Secret:", secret);
-    console.log("Extracted User ID:", userId);
-
     if (!secret || !userId) {
       throw new Error("Failed to extract OAuth credentials");
     }
 
     // Create session with OAuth credentials
     const session = await account.createSession(userId, secret);
-    console.log("Session Created:", session);
 
     return true;
   } catch (error) {
