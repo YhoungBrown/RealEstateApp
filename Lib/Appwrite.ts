@@ -39,7 +39,6 @@ export const logIn = async () => {
     
     const browserResult =  await WebBrowser.openAuthSessionAsync(`${loginUrl}`, scheme);
 
-    console.log("Browser Result:", browserResult);
 
     if (!browserResult || browserResult.type !== "success" || !browserResult.url) {
       throw new Error("OAuth login was unsuccessful");
@@ -56,6 +55,7 @@ export const logIn = async () => {
 
     // Create session with OAuth credentials
     const session = await account.createSession(userId, secret);
+    if (!session) throw new Error("Failed to create session");
 
     return true;
   } catch (error) {
