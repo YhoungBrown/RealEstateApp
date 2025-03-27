@@ -30,7 +30,7 @@ export const FeaturedCards = ({ item: {image, rating, name, address, price} , on
 
                 {/* Price and Heart */}
                 <View style={s`flex flex-row items-center justify-between w-full mt-2`}>
-                    <Text style={s`text-white text-xl font-bold pl-0.5`}>{price}</Text>
+                    <Text style={s`text-white text-xl font-bold pl-0.5`}>${price}</Text>
                     <Image source={icons.heart} style={[s`w-5 h-5`, {position: 'absolute', top: 5, right: 65}]} tintColor={"white"} />
                 </View>
             </View>
@@ -59,7 +59,7 @@ export const Cards =  ({ item: {image, rating, name, address, price} , onPress }
 
                 {/* Price and Heart */}
                 <View style={s`flex flex-row justify-between mt-2 items-center`}>
-                    <Text style={s`text-xl font-bold text-primary-400`}>{price}</Text>
+                    <Text style={s`text-xl font-bold text-primary-400`}>${price}</Text>
                     <Image source={icons.heart} style={s`w-5 h-5`} tintColor={"#191d31"} />
                 </View>
             </View>
