@@ -1,29 +1,26 @@
+import { router, useLocalSearchParams } from "expo-router";
 import {
+  Dimensions,
   FlatList,
   Image,
+  Platform,
   ScrollView,
   Text,
   TouchableOpacity,
   View,
-  Dimensions,
-  Platform,
 } from "react-native";
-import { router, useLocalSearchParams } from "expo-router";
 
-import icons from "@/constants/icons";
-import images from "@/constants/images";
 import Comment from "@/components/Comment";
 import { facilities } from "@/constants/data";
+import icons from "@/constants/icons";
+import images from "@/constants/images";
 
-import { useAppwrite} from "@/Lib/useAppwrite";
-import { gettingPropertyById} from "@/Lib/Appwrite";
-import { useFocusEffect } from "expo-router";
-import { useCallback } from "react";
+import { gettingPropertyById } from "@/Lib/Appwrite";
+import { useAppwrite } from "@/Lib/useAppwrite";
 
 
 
 import { s } from "react-native-wind";
-import { SafeAreaView } from "react-native-safe-area-context";
 
 const Property = () => {
   
