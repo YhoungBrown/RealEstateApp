@@ -208,10 +208,12 @@ const Property = () => {
                 horizontal
                 showsHorizontalScrollIndicator={false}
                 renderItem={({ item }) => (
-                  <Image
-                    source={{ uri: item.image }}
-                    style={s`h-40 w-40 rounded-xl`}
-                  />
+                  <View style={s`mr-3`}>
+                    <Image
+                      source={{ uri: item.image }}
+                      style={s`h-40 w-40 rounded-xl`}
+                    />
+                  </View>
                 )}
               />
             </View>

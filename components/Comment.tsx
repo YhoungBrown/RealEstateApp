@@ -10,7 +10,7 @@ interface Props {
 
 const Comment = ({ item }: Props) => {
   return (
-    <View style={s`flex flex-col items-start`}>
+    <View style={s`flex flex-col items-start border border-primary-300 p-4 rounded-lg w-full`}>
       <View style={s`flex flex-row items-center`}>
         <Image source={{ uri: item.avatar }} style={s`h-14 w-14 rounded-full`} />
         <Text style={s`text-base text-black-300 text-start font-rubik-bold ml-3`}>
@@ -18,7 +18,7 @@ const Comment = ({ item }: Props) => {
         </Text>
       </View>
 
-      <Text style={s`text-black-200 text-base font-rubik mt-2`}>
+      <Text style={s`text-black-200 text-base mt-2`}>
         {item.review}
       </Text>
 
@@ -29,11 +29,11 @@ const Comment = ({ item }: Props) => {
             style={s`h-5 w-5`}
             tintColor={"#0061FF"}
           />
-          <Text style={s`text-black-300 text-sm font-rubik-medium ml-2`}>
+          <Text style={s`text-black-300 text-sm font-medium ml-2`}>
             120
           </Text>
         </View>
-        <Text style={s`text-black-100 text-sm font-rubik`}>
+        <Text style={s`text-black-100 text-sm`}>
           {new Date(item.$createdAt).toDateString()}
         </Text>
       </View>
